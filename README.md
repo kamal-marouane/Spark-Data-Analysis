@@ -506,7 +506,7 @@ plt.show()
 
 ---
 
-### 3. Conclusion
+#### 3. Conclusion
 - The correlation analysis suggests that there is a **weak positive correlation** between **high CPU usage** and **eviction events**, implying that some evictions may be triggered by **resource contention** due to CPU overload.
 - Conversely, **memory usage** appears to have a **negligible effect** on eviction events, indicating that tasks are less likely to be evicted due to **memory pressure**.
 - Further investigation into **scheduling policies** and **resource limits** might provide more insights into the root causes of evictions.
@@ -895,8 +895,3 @@ The **histogram** displays the distribution of **job durations** (in seconds).
 
 - Most jobs have a **short duration**, but a few jobs experience **much longer runtimes**.
 - Some jobs lasted for **over an hour**, indicating potential **bottlenecks** in either the **resource allocation**, **dependencies**, or **external factors**.
-
-
-```python
-
-```
