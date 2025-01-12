@@ -1,0 +1,17 @@
+kafka-python
+pandas
+pyyaml
+python-snappy
+confluent-kafka
+kafka-python
+csv
+gzip
+json
+time
+yaml
+logging
+os
+heapq
+argparse
+pyspark
+prometheus-client
