@@ -1,4 +1,4 @@
-# Detailed README Report
+# Extensions
 
 ## Overview
 In this project, we set up a complete data pipeline for streaming data using Apache Kafka, Spark Structured Streaming, and Prometheus for metrics visualization via Grafana. All the setup was done on the Cloud, except for the execution of the producer and Spark job, which were executed locally as a proof of concept. We can easily set up an image and run it on GKE.
