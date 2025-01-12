@@ -1,0 +1,100 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: Kafka
+metadata:
+  name: kafka-cluster
+  namespace: kafka
+spec:
+  kafka:
+    version: 3.9.0  # Updated to a supported version
+    replicas: 2
+    logging:
+      type: inline
+      loggers:
+        kafka.root.logger.level: "INFO"
+    listeners:
+      - name: plain
+        port: 9092
+        type: internal
+        tls: false
+      - name: external
+        port: 9094
+        type: loadbalancer
+        tls: false
+      - name: tls
+        port: 9093
+        type: internal
+        tls: true
+    rack:
+      topologyKey: topology.kubernetes.io/zone
+    storage:
+      type: jbod
+      volumes:
+        - id: 0
+          type: persistent-claim
+          size: 10Gi
+          deleteClaim: false
+    config:
+      offsets.topic.replication.factor: 2
+      transaction.state.log.replication.factor: 2
+      transaction.state.log.min.isr: 2
+    template:
+      pod:
+        affinity:
+          podAntiAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+              - weight: 100
+                podAffinityTerm:
+                  labelSelector:
+                    matchExpressions:
+                      - key: strimzi.io/cluster
+                        operator: In
+                        values:
+                          - kafka-cluster
+                  topologyKey: "kubernetes.io/hostname"
+      externalBootstrapService:
+        metadata:
+          annotations:
+            cloud.google.com/load-balancer-type: "External"
+      perPodService:
+        metadata:
+          annotations:
+            cloud.google.com/load-balancer-type: "External"
+
+  zookeeper:
+    replicas: 1
+    storage:
+      type: persistent-claim
+      size: 10Gi
+      deleteClaim: false
+    template:
+      pod:
+        affinity:
+          podAntiAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+              - weight: 100
+                podAffinityTerm:
+                  labelSelector:
+                    matchExpressions:
+                      - key: strimzi.io/cluster
+                        operator: In
+                        values:
+                          - kafka-cluster
+                  topologyKey: "kubernetes.io/hostname"
+        securityContext:
+          runAsUser: 1000001
+          fsGroup: 0
+        terminationGracePeriodSeconds: 120
+
+  entityOperator:
+    topicOperator: {}
+    userOperator: {}
+
+  cruiseControl:
+    brokerCapacity:
+      inboundNetwork: 1000KB/s
+      outboundNetwork: 1000KB/s
+    config:
+      hard.goals: >
+        com.linkedin.kafka.cruisecontrol.analyzer.goals.RackAwareGoal,
+        com.linkedin.kafka.cruisecontrol.analyzer.goals.NetworkInboundCapacityGoal,
+        com.linkedin.kafka.cruisecontrol.analyzer.goals.NetworkOutboundCapacityGoal

@@ -1,0 +1,28 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: job-events  # Name of the topic
+  namespace: kafka  # Namespace where Kafka is deployed
+  labels:
+    strimzi.io/cluster: kafka-cluster  # Name of the Kafka cluster
+spec:
+  partitions: 12  # Increased number of partitions
+  replicas: 2  # Reduced replication factor to match available brokers
+  config:
+    retention.ms: 1209600000  # 14 days retention
+    segment.bytes: 1073741824  # 1GB segment size
+
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: task-events  # Name of the topic
+  namespace: kafka  # Namespace where Kafka is deployed
+  labels:
+    strimzi.io/cluster: kafka-cluster  # Name of the Kafka cluster
+spec:
+  partitions: 12  # Increased number of partitions
+  replicas: 2  # Reduced replication factor to match available brokers
+  config:
+    retention.ms: 1209600000  # 14 days retention
+    segment.bytes: 1073741824  # 1GB segment size

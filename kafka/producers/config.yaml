@@ -1,0 +1,11 @@
+kafka:
+  bootstrap_servers: "34.45.123.229:9094"
+  batch_size: 32768  # Reduce to smaller batches
+  linger_ms: 100  # Wait slightly longer to batch messages
+  buffer_memory: 67108864  # 64 MB buffer to avoid overflow
+  simulation_duration: 60  # Run the simulation for 60 seconds
+
+topics:
+  job-events: "job-events"
+  task-events: "task-events"
+time_scaling_factor: 1000000  # Increased to handle microsecond timestamps
